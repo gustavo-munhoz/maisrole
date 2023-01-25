@@ -23,7 +23,7 @@ model personalData {
   cellNumber  String?
   firstName   String
   lastName    String
-  dateOfBirth DateTime?
+  dateOfBirth String?
   email       String    @unique
   user        User?     @relation(fields: [userId], references: [id], onUpdate: Cascade)
   userId      Int?      @unique

@@ -8,7 +8,6 @@ const USER_FIELDS = {
     personalData: true,
     roles: true
 }
-
 export async function signUser(user) {
     //INSERT -- ok
     console.log(user)
@@ -56,7 +55,6 @@ export async function loadById(id) {
     // SELECT WHERE id -- ok
     return prisma.user.findUnique({where: {id}, select: {...USER_FIELDS} });
 }
-
 export async function loadByCredentials(username, password) {
     // SELECT WHERE username AND password -- ok
     const user = await prisma.user.findUnique({where: {username},
@@ -72,7 +70,6 @@ export async function loadByCredentials(username, password) {
     delete user.password;
     return user;
 }
-
 export async function deleteUser(id) {
     //DELETE -- ok
     const deletePersonalData = prisma.personalData.delete({

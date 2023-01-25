@@ -51,7 +51,6 @@ async function makeAdmin() {
 }
 
 async function findCreators(){
-
     const andre = await prisma.user.findUnique({
         where: {
             username: 'andre'
@@ -76,7 +75,14 @@ async function makeCreators() {
                 id: 2,
                 username: 'andre',
                 password: await bcrypt.hash('An@@2013/', await bcrypt.genSalt()),
-                personalData: {},
+                personalData: { create: {
+                        cellNumber: "(41) 93823-3123",
+                        firstName: "André",
+                        lastName: "Wozniack",
+                        dateOfBirth: "06/04/03",
+                        email: "andre.wozniack@pucpr.edu.br"
+                        }
+                    },
                 roles: {
                     connect: [
                         {name: 'ADMIN'},
@@ -93,7 +99,14 @@ async function makeCreators() {
                 id: 3,
                 username: 'gusta',
                 password: await bcrypt.hash('1234', await bcrypt.genSalt()),
-                personalData: {},
+                personalData: { create: {
+                        cellNumber: "(41) 93120-2193",
+                        firstName: "Gustavo",
+                        lastName: "Munhoz Corrêa",
+                        dateOfBirth: "11/04/01",
+                        email: "munhoz.correa@pucpr.edu.br"
+                        }
+                    },
                 roles: {
                     connect: [
                         {name: 'ADMIN'},
