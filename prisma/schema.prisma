@@ -20,10 +20,10 @@ model User {
 
 model personalData {
   id          Int      @id @default(autoincrement())
-  cellNumber  String
+  cellNumber  String?
   firstName   String
   lastName    String
-  dateOfBirth DateTime
+  dateOfBirth DateTime?
   email       String   @unique
   user        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique

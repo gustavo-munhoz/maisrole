@@ -7,7 +7,7 @@ const USER_FIELDS = {
     password: false,
     personalData: {
         id: false,
-        cellNumber: false,
+        cellNumber: true,
         firstName: true,
         lastName: true,
         dateOfBirth: true,
@@ -18,7 +18,20 @@ const USER_FIELDS = {
 
 export async function signUser(user) {
     //INSERT
-    await prisma.user.create({data: {...user}});
+    return prisma.user.create({
+        data: {
+            username: user.username,
+            password: user.password,
+            personalData: {
+                create: {
+                    firstName: user.personalData.firstName,
+                    lastName: user.personalData.lastName,
+                    cellNumber: user.personalData.cellNumber,
+                    email: user.personalData.email
+                }
+            }
+        }
+    });
 }
 
 export async function loadById(id) {

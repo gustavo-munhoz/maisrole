@@ -28,7 +28,7 @@ import {getUser, login, register, removeUser, saveUser} from "./service.mjs";
  */
 export async function userRegister(req, res, _) {
     const saved = await register(req.body);
-    return saved ? res.sendStatus(201) : res.status(400).message("Invalid User!");}
+    return saved ? res.sendStatus(201) : res.sendStatus(400);}
 
 /**
  * @openapi
