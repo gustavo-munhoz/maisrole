@@ -41,7 +41,7 @@ export async function loadById(id) {
 
 export async function loadByCredentials(username, password) {
     // SELECT WHERE username AND password
-    return prisma.user.findUnique({where: username,
+    return prisma.user.findUnique({where: username, password,
         select: {...USER_FIELDS,
             password: false}})
 }

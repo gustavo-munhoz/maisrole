@@ -43,7 +43,7 @@ components:
           required:
             - firstName
             - lastName
-            - celNumber
+            - cellNumber
             - email
           properties:
             firstName:
@@ -56,7 +56,7 @@ components:
               minLength: 3
               maxLength: 30
               example: Doe
-            celNumber:
+            cellNumber:
               type: string
               minLength: 8
               maxLength: 20
@@ -89,7 +89,7 @@ components:
           required:
             - firstName
             - lastName
-            - celNumber
+            - cellNumber
             - email
           properties:
             firstName:
@@ -102,7 +102,7 @@ components:
               minLength: 3
               maxLength: 30
               example: Doe
-            celNumber:
+            cellNumber:
               type: string
               minLength: 8
               maxLength: 20
