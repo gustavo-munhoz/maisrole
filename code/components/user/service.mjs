@@ -14,8 +14,8 @@ export async function login({username, password}) {
     return null;
 }
 
-export async function getUser(id, showPersonalData) {
-    return loadById(id, showPersonalData);
+export async function getUser(id) {
+    return loadById(id);
 }
 
 export async function removeUser(id){

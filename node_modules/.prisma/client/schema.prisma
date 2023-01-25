@@ -11,21 +11,21 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  username     String         @unique
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
   password     String
   personalData personalData?
   roles        Role[]
 }
 
 model personalData {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   cellNumber  String?
   firstName   String
   lastName    String
   dateOfBirth DateTime?
-  email       String   @unique
-  user        User?     @relation(fields: [userId], references: [id])
+  email       String    @unique
+  user        User?     @relation(fields: [userId], references: [id], onUpdate: Cascade)
   userId      Int?      @unique
 }
 

@@ -54,7 +54,7 @@ export async function signUser(user) {
 
 export async function loadById(id) {
     // SELECT WHERE id -- ok
-    return prisma.user.findUnique({where: {id}});
+    return prisma.user.findUnique({where: {id}, select: {...USER_FIELDS} });
 }
 
 export async function loadByCredentials(username, password) {
@@ -89,5 +89,29 @@ export async function deleteUser(id) {
 
 export async function updateUser(user) {
     //UPDATE
-    return prisma.user.update({where: user.id, data: {...user}});
+    console.log(user)
+    const updatePersonalData = prisma.personalData.update({
+        where: {
+            userId: user.id
+            },
+        data: {
+            firstName: user.personalData.firstName,
+            lastName: user.personalData.lastName,
+            cellNumber: user.personalData.cellNumber,
+            email: user.personalData.email,
+            dateOfBirth: user.personalData.dateOfBirth
+        }
+    }
+    );
+    const updateUser = prisma.user.update({
+        where: {
+            id: user.id
+        },
+        data: {
+            username: user.username,
+            password: user.password,
+            roles: user.roles
+        }
+    })
+    return prisma.$transaction([updatePersonalData, updateUser])
 }
