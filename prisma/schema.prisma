@@ -25,8 +25,8 @@ model personalData {
   lastName    String
   dateOfBirth DateTime?
   email       String   @unique
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int      @unique
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      Int?      @unique
 }
 
 model Role {

@@ -5,50 +5,86 @@ const USER_FIELDS = {
     id: true,
     username: true,
     password: false,
-    personalData: {
-        id: false,
-        cellNumber: true,
-        firstName: true,
-        lastName: true,
-        dateOfBirth: true,
-        email: true
-    },
+    personalData: true,
     roles: true
 }
 
 export async function signUser(user) {
-    //INSERT
-    return prisma.user.create({
-        data: {
-            username: user.username,
-            password: user.password,
-            personalData: {
-                create: {
-                    firstName: user.personalData.firstName,
-                    lastName: user.personalData.lastName,
-                    cellNumber: user.personalData.cellNumber,
-                    email: user.personalData.email
+    //INSERT -- ok
+    console.log(user)
+    if (!user.roles){
+        return prisma.user.create({
+            data: {
+                username: user.username,
+                password: await bcrypt.hash(user.password, await bcrypt.genSalt()),
+                personalData: {
+                    create: {
+                        firstName: user.personalData.firstName,
+                        lastName: user.personalData.lastName,
+                        cellNumber: user.personalData.cellNumber,
+                        email: user.personalData.email
+                    }
+                },
+                roles: {
+                    connect: [
+                        {name: 'USER'}
+                    ]
                 }
             }
-        }
-    });
+        });
+    }
+    else {
+        return prisma.user.create({
+            data: {
+                username: user.username,
+                password: await bcrypt.hash(user.password, await bcrypt.genSalt()),
+                personalData: {
+                    create: {
+                        firstName: user.personalData.firstName,
+                        lastName: user.personalData.lastName,
+                        cellNumber: user.personalData.cellNumber,
+                        email: user.personalData.email
+                    }
+                },
+                roles: user.roles
+            }
+        });
+    }
 }
 
 export async function loadById(id) {
-    // SELECT WHERE id
-    return prisma.user.findUnique({where: id});
+    // SELECT WHERE id -- ok
+    return prisma.user.findUnique({where: {id}});
 }
 
 export async function loadByCredentials(username, password) {
-    // SELECT WHERE username AND password
-    return prisma.user.findUnique({where: username, password,
-        select: {...USER_FIELDS,
-            password: false}})
+    // SELECT WHERE username AND password -- ok
+    const user = await prisma.user.findUnique({where: {username},
+        select: {
+            ...USER_FIELDS,
+            password: true
+        }});
+    if (!user) return null
+
+    if (!await bcrypt.compare(password, user.password)){
+        return null;
+    }
+    delete user.password;
+    return user;
 }
 
 export async function deleteUser(id) {
-    //DELETE
-    return prisma.user.delete({where: id})
+    //DELETE -- ok
+    const deletePersonalData = prisma.personalData.delete({
+        where: {
+            userId: id
+        }
+    })
+    const deleteUser = prisma.user.delete({
+        where: {
+            id: id
+        }})
+    return prisma.$transaction([deletePersonalData ,deleteUser])
 }
 
 export async function updateUser(user) {
