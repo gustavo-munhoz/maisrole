@@ -11,13 +11,20 @@ import swaggerUi from 'swagger-ui-express';
 import resolver from './esmresolver.mjs';
 import {JWT_SECURITY} from "../lib/security.mjs";
 import {bootstrapDb} from "../lib/database.mjs";
+import {isDev} from "../lib/env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 const BASE_PATH = `${__dirname}/../components`;
+const MORGAN_FMT = isDev() ? "dev" :
+    ":remote-addr :method :url HTTP/:http-version :status :res[content-length]-:response-time ms";
 
-app.use(logger('dev'));
+app.use(logger(MORGAN_FMT, {
+    skip: (req, res) =>
+        req.url.includes("healthCheck") && (res.statusCode === 200 || res.statusCode === 304)
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

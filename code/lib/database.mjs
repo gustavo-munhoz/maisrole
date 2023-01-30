@@ -1,16 +1,17 @@
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt";
+import {debug, info} from "./logging.mjs";
 
 export const prisma = new PrismaClient()
 
 async function makeRole(name) {
     const exists = await prisma.role.findUnique({where: {name}})
     if (exists) {
-        console.log(`  Role ${name} found!`)
+        debug({description: `Role ${name} found!`});
         return
     }
     await prisma.role.create({data: {name}})
-    console.log(`  Role ${name} created!`)
+    info({description: `Role ${name} created!`})
 }
 
 async function makeAdmin() {
@@ -29,8 +30,8 @@ async function makeAdmin() {
             }
         }
     })
-    if(exists) {
-        console.log(`  Administrator found!  `)
+    if (exists) {
+        debug({description: `Administrator found!`});
         return
     }
 
@@ -47,7 +48,7 @@ async function makeAdmin() {
             }
         }
     })
-    console.log(`  Administrator created!    `)
+    info({description: `Administrator created!`});
 }
 
 async function findCreators(){
@@ -66,7 +67,7 @@ async function findCreators(){
 async function makeCreators() {
     const exists = await findCreators()
     if (exists[0] !== null && exists[1] !== null) {
-        console.log('  Creators Found!')
+        debug({description: 'Creators Found!'});
         return
     }
     await prisma.user.create({
@@ -116,13 +117,13 @@ async function makeCreators() {
             }
         }
     )
-    console.log('  Creators Added!     ')
+    info({description: 'Creators Added!'});
 }
 export async function bootstrapDb() {
-    console.log("Checking initial data...")
+    debug({description: "Checking initial data..."});
     await makeRole('ADMIN');
     await makeRole('USER');
     await makeAdmin();
     await makeCreators();
-    console.log("Done!");
+    debug({description: "Done!"});
 }

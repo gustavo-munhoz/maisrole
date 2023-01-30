@@ -76,17 +76,16 @@ export async function deleteUser(id) {
         where: {
             userId: id
         }
-    })
+    });
     const deleteUser = prisma.user.delete({
         where: {
             id: id
-        }})
+        }});
     return prisma.$transaction([deletePersonalData ,deleteUser])
 }
 
 export async function updateUser(user) {
     //UPDATE
-    console.log(user)
     const updatePersonalData = prisma.personalData.update({
         where: {
             userId: user.id
@@ -98,8 +97,7 @@ export async function updateUser(user) {
             email: user.personalData.email,
             dateOfBirth: user.personalData.dateOfBirth
         }
-    }
-    );
+    });
     const updateUser = prisma.user.update({
         where: {
             id: user.id
@@ -109,6 +107,6 @@ export async function updateUser(user) {
             password: user.password,
             roles: user.roles
         }
-    })
+    });
     return prisma.$transaction([updatePersonalData, updateUser])
 }
