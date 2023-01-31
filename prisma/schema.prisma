@@ -48,7 +48,7 @@ model Info {
   id      Int       @id @default(autoincrement())
   address Address[]
   contact Contact[]
-  host    Host?     @relation(fields: [hostId], references: [id], onUpdate: Cascade)
+  host    Host?     @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   hostId  Int?      @unique
 }
 
@@ -60,25 +60,32 @@ model Address {
   district String
   city     String
   state    String
-  info     Info?  @relation(fields: [infoId], references: [id], onUpdate: Cascade)
+  info     Info?  @relation(fields: [infoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   infoId   Int?
 }
 
 model Contact {
-  id     Int    @id @default(autoincrement())
-  tel    String
-  email String @unique
+  id     Int     @id @default(autoincrement())
+  tel    Phone[]
+  email  String  @unique
   infoId Int?
-  info   Info?  @relation(fields: [id], references: [id])
+  info   Info?   @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Phone {
+  id        Int     @id @default(autoincrement())
+  phone     String
+  contact   Contact @relation(fields: [contactId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  contactId Int
 }
 
 model ReviewUserHost {
   userId   Int
-  user     User?   @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  user     User?   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   hostId   Int
-  host     Host?   @relation(fields: [hostId], references: [id], onUpdate: Cascade)
+  host     Host?   @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   reviewId Int
-  review   Review? @relation(fields: [reviewId], references: [id], onUpdate: Cascade)
+  review   Review? @relation(fields: [reviewId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   @@id([userId, hostId, reviewId])
 }
