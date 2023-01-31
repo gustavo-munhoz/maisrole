@@ -96,3 +96,29 @@ export async function loadByCredentials(email, password) {
     delete host.password;
     return host;
 }
+
+export async function deleteHost(id) {
+    //DELETE -- ok
+    const deletePersonalData = prisma.personalData.delete({
+        where: {
+            userId: id
+        }
+    });
+    const deleteUser = prisma.user.delete({
+        where: {
+            id: id
+        }});
+    return prisma.$transaction([deletePersonalData ,deleteUser])
+}
+
+export async function insertRating(host, rating) {
+    return prisma.host.update({
+        where: {
+            id: host.id
+        },
+        data: {
+            rating: (host.rating * host.timesRated + rating) / (host.timesRated + 1),
+            timesRated: host.timesRated + 1
+        }
+    });
+}

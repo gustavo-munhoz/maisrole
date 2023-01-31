@@ -1,4 +1,4 @@
-import {getUser, login, register, removeUser, saveUser} from "./service.mjs";
+import {getUser, login, rate, register, removeUser, saveUser} from "./service.mjs";
 
 /**
  * @openapi
@@ -173,4 +173,15 @@ export async function deleteAccount(req, res, _) {
 export async function updateAccount(req, res, _) {
     const saved = await saveUser({id: req.user.id, ...req.body});
     return saved ? res.json({id: req.user.id, ...req.body}) : res.sendStatus(404);
+}
+
+/**
+ * @openapi
+ * /users/me/rating/{hostId}:
+ *   put:
+ *     summary: "Adds a rating to desired host"
+ *
+ */
+export async function userRateHost(req, res, _) {
+    const rated = await rate()
 }

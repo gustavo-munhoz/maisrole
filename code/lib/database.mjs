@@ -19,7 +19,7 @@ async function makeAdmin() {
     const password = await bcrypt.hash(
         process.env.DEFAULT_ADMIN_PWD,
         await bcrypt.genSalt()
-    )
+    );
 
     const exists = await prisma.user.findFirst({
         where: {
@@ -30,7 +30,7 @@ async function makeAdmin() {
 
             }
         }
-    })
+    });
     if (exists) {
         debug({description: `Administrator found!`});
         return
@@ -38,6 +38,7 @@ async function makeAdmin() {
 
     await prisma.user.create({
         data:{
+            id: 1,
             username,
             password,
             personalData: {},
@@ -48,11 +49,11 @@ async function makeAdmin() {
                 ]
             }
         }
-    })
+    });
     info({description: `Administrator created!`});
 }
 
-async function findCreators(){
+async function findCreators() {
     const andre = await prisma.user.findUnique({
         where: {
             username: 'andre'
@@ -63,7 +64,7 @@ async function findCreators(){
             username: 'gusta'
         }
     });
-    return [andre, gusta]
+    return [andre, gusta];
 }
 async function makeCreators() {
     const exists = await findCreators()
@@ -127,5 +128,4 @@ export async function bootstrapDb() {
     await makeRole('HOST');
     await makeAdmin();
     await makeCreators();
-    debug({description: "Done!"});
 }

@@ -12,6 +12,7 @@ import resolver from './esmresolver.mjs';
 import {JWT_SECURITY} from "../lib/security.mjs";
 import {bootstrapDb} from "../lib/database.mjs";
 import {isDev} from "../lib/env.mjs";
+import {runAndLog} from "../lib/logging.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -68,6 +69,5 @@ app.use(OpenApiValidator.middleware({
 
 app.use(express.static(`${__dirname}/../public`));
 
-
-bootstrapDb().catch(console.error);
+runAndLog(bootstrapDb(), {origin: 'bootstrap'});
 export default app;

@@ -39,8 +39,10 @@ model Host {
   id       Int              @id @default(autoincrement())
   hostName String
   password String
-  score    Float
-  info     Info?
+  rating    Float
+  timesRated Int
+  address Address[]
+  contact Contact[]
   reviews  ReviewUserHost[]
 }
 
@@ -66,6 +68,9 @@ model Address {
 
 model Contact {
   id     Int     @id @default(autoincrement())
+  insta  String  @unique
+  face   String  @unique
+  mobile String  @unique
   tel    Phone[]
   email  String  @unique
   infoId Int?
