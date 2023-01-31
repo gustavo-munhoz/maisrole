@@ -25,8 +25,9 @@ async function makeAdmin() {
         where: {
             roles: {
                 some: {
-                    name : 'ADMIN'
+                    name: 'ADMIN'
                 }
+
             }
         }
     })
@@ -123,6 +124,7 @@ export async function bootstrapDb() {
     debug({description: "Checking initial data..."});
     await makeRole('ADMIN');
     await makeRole('USER');
+    await makeRole('HOST');
     await makeAdmin();
     await makeCreators();
     debug({description: "Done!"});

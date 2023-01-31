@@ -11,25 +11,81 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  username     String        @unique
+  id           Int              @id @default(autoincrement())
+  username     String           @unique
   password     String
   personalData personalData?
   roles        Role[]
+  reviews      ReviewUserHost[]
 }
 
 model personalData {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   cellNumber  String?
   firstName   String
   lastName    String
   dateOfBirth String?
-  email       String    @unique
-  user        User?     @relation(fields: [userId], references: [id], onUpdate: Cascade)
-  userId      Int?      @unique
+  email       String  @unique
+  user        User?   @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  userId      Int?    @unique
 }
 
 model Role {
   name  String @id
   users User[]
+}
+
+model Host {
+  id       Int              @id @default(autoincrement())
+  hostName String
+  password String
+  score    Float
+  info     Info?
+  reviews  ReviewUserHost[]
+}
+
+model Info {
+  id      Int       @id @default(autoincrement())
+  address Address[]
+  contact Contact[]
+  host    Host?     @relation(fields: [hostId], references: [id], onUpdate: Cascade)
+  hostId  Int?      @unique
+}
+
+model Address {
+  id       Int    @id @default(autoincrement())
+  street   String
+  number   String
+  cep      String
+  district String
+  city     String
+  state    String
+  info     Info?  @relation(fields: [infoId], references: [id], onUpdate: Cascade)
+  infoId   Int?
+}
+
+model Contact {
+  id     Int    @id @default(autoincrement())
+  tel    String
+  email String @unique
+  infoId Int?
+  info   Info?  @relation(fields: [id], references: [id])
+}
+
+model ReviewUserHost {
+  userId   Int
+  user     User?   @relation(fields: [userId], references: [id], onUpdate: Cascade)
+  hostId   Int
+  host     Host?   @relation(fields: [hostId], references: [id], onUpdate: Cascade)
+  reviewId Int
+  review   Review? @relation(fields: [reviewId], references: [id], onUpdate: Cascade)
+
+  @@id([userId, hostId, reviewId])
+}
+
+model Review {
+  id         Int              @id @default(autoincrement())
+  postDate   String
+  text       String
+  connection ReviewUserHost[]
 }
