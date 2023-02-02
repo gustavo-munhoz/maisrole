@@ -69,7 +69,7 @@ model Contact {
 model Phone {
   id        Int      @id @default(autoincrement())
   phone     String
-  contact   Contact @relation(fields: [contactId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  contact   Contact? @relation(fields: [contactId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   contactId Int
 }
 

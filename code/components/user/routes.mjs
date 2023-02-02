@@ -125,7 +125,7 @@ export async function showCreators(req, res, _) {
  *       - "userProfile"
  *
  *     operationId: deleteAccount
- *     x-eov-operation-handler: user/router
+ *     x-eov-operation-handler: user/routes
  *
  *     responses:
  *       '200':

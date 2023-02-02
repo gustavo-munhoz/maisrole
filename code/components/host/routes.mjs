@@ -4,10 +4,10 @@ import {getHost, login, register, removeHost, saveRating,} from "./service.mjs";
  * @openapi
  * /hosts/register:
  *   post:
- *     summary: "Registers a new user"
+ *     summary: "Registers a new host"
  *
  *     tags:
- *       - "profile"
+ *       - "hostProfile"
  *
  *     operationId: hostRegister
  *     x-eov-operation-handler: host/routes
@@ -39,7 +39,7 @@ export async function hostRegister(req, res, _) {
  *     tags:
  *       - "auth"
  *
- *     operationId: userLogin
+ *     operationId: hostLogin
  *
  *     x-eov-operation-handler: host/routes
  *
@@ -70,10 +70,10 @@ export async function hostLogin(req, res, _) {
  *     summary: "Retrieves user information"
  *
  *     tags:
- *       - "profile"
+ *       - "hostProfile"
  *
  *     operationId: printUser
- *     x-eov-operation-handler: host/router
+ *     x-eov-operation-handler: host/routes
  *
  *     responses:
  *       '200':
@@ -99,16 +99,16 @@ export async function printHost(req, res, _) {
  *   delete:
  *     summary: "Deletes the current user"
  *     tags:
- *       - profile
+ *       - "hostProfile"
  *
  *     operationId: deleteAccount
- *     x-eov-operation-handler: host/router
+ *     x-eov-operation-handler: host/routes
  *
  *     responses:
  *       '200':
  *         description: "Account deleted successfully"
  *       '404':
- *         description: "User not found"
+ *         description: "Host not found"
  *
  *     security:
  *       - JWT: ['USER']
