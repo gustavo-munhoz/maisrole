@@ -45,7 +45,8 @@ async function makeAdmin() {
             roles: {
                 connect: [
                     {name: 'ADMIN'},
-                    {name: 'USER'}
+                    {name: 'USER'},
+                    {name: 'HOST'}
                 ]
             }
         }

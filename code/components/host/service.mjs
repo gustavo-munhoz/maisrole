@@ -1,4 +1,4 @@
-import {deleteHost, insertRating, loadByCredentials, loadById, signHost} from "./repository.mjs";
+import {deleteHost, insertReview, loadByCredentials, loadById, signHost} from "./repository.mjs";
 import {createToken} from "../../lib/security.mjs";
 
 export async function register(host) {
@@ -22,5 +22,5 @@ export async function removeHost(id){
     return deleteHost(id);
 }
 export async function saveRating(host, rating) {
-    return insertRating(host, rating);
+    return insertReview(host, rating);
 }

@@ -1,1 +1,161 @@
-tags
+tags:
+  - name: HostProfile
+    description: Host information
+  - name: auth
+    description: Authentication routes
+
+components:
+  schemas:
+    UsernamePassword:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 5
+          maxLength: 30
+          example: johndoe
+        password:
+          type: string
+          example: mYp@s$w0rd
+    HostRegister:
+      type: object
+      required:
+        - email
+        - password
+        - hostName
+        - contact
+      properties:
+        email:
+          type: string
+          minLength: 5
+          maxLength: 100
+          example: john.doe@email.com
+        password:
+          type: string
+          pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*(),.?":{}|<>])[A-Za-z\d!@#\$%^&*(),.?":{}|<>]'
+          minLength: 8
+          example: mYp@s$w0rd
+        hostName:
+          type: string
+          minLength: 1
+          maxLength: 30
+          example: Bar do Juca
+        contact:
+          type: object
+          required:
+            - email
+            - phones
+          properties:
+            email:
+              type: string
+              minLength: 5
+              maxLength: 100
+              example: john.doe@email.com
+            phones:
+              type: object
+              required:
+                - phone
+              properties:
+                phone:
+                  type: string
+                  minLength: 8
+                  maxLength: 25
+                  example: +55 (41) 98782-6083
+        address:
+          type: object
+          required:
+            - street
+            - number
+            - cep
+            - district
+            - city
+            - state
+          properties:
+            street:
+              type: string
+              example: Rua Brasil
+            number:
+              type: string
+              example: +55 (41) 98754-3210
+            cep:
+              type: string
+              example: 82340-210
+            district:
+              type: string
+              example: Bairro Alto
+            city:
+              type: string
+              example: Curitiba
+            state:
+              type: string
+              example: Paraná
+    Update:
+      type: object
+      required:
+        - username
+        - password
+        - personalData
+      properties:
+        username:
+          type: string
+          minLength: 5
+          maxLength: 30
+          example: johndoe
+          pattern: '^(?!.*\s)(?!.*[!@#\$%^&*(),.?":{}|<>])[A-Za-z\d]'
+        password:
+          type: string
+          pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*(),.?":{}|<>])[A-Za-z\d!@#\$%^&*(),.?":{}|<>]'
+          minLength: 8
+          example: $3crEt!z
+        personalData:
+          type: object
+          required:
+            - firstName
+            - lastName
+            - cellNumber
+            - email
+          properties:
+            firstName:
+              type: string
+              minLength: 3
+              maxLength: 30
+              example: John
+            lastName:
+              type: string
+              minLength: 3
+              maxLength: 30
+              example: Doe
+            cellNumber:
+              type: string
+              minLength: 8
+              maxLength: 20
+              example: +55 (11) 98205-6580
+            email:
+              type: string
+              minLength: 10
+              maxLength: 50
+              example: newemail@gmail.com
+
+    Id:
+      type: integer
+      format: int32
+      minimum: 1
+      example: 150
+
+  parameters:
+    Id:
+      in: path
+      name: id
+      description: Unique id
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

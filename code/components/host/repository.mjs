@@ -5,70 +5,43 @@ const HOST_FIELDS = {
     id: true,
     hostName: true,
     password: false,
-    score: true,
-    info: true,
+    rating: true,
+    timesRated: true,
+    address: true,
+    contact: true,
     reviews: true,
 }
 
 export async function signHost(host) {
-    const dataForCreation = {
-        hostName: host.hostName,
-        password: await bcrypt.hash(host.password, await bcrypt.genSalt()),
-        score: host.score,
-        info: {
-            create: {
-                address: {
-                    create: {
-                        street: host.info.address.street,
-                        number: host.info.address.number,
-                        cep: host.info.address.cep,
-                        district: host.info.address.district,
-                        city: host.info.address.state,
-                        state: host.info.address.state
-                    }
-                },
-                contact: {
-                    create: {
-                        insta: host.info.insta,
-                        face: host.info.face,
-                        mobile: host.info.mobile,
-                        email: host.info.email,
-                        phones: {
-                            createMany: [
-                                ...host.info.contact.phones
-                            ]
+    return prisma.host.create({
+        data: {
+            hostName: host.hostName,
+            password: await bcrypt.hash(host.password, await bcrypt.genSalt()),
+            address: {
+                create: {
+                    street: host.address.street,
+                    number: host.address.number,
+                    cep: host.address.cep,
+                    district: host.address.district,
+                    city: host.address.state,
+                    state: host.address.state
+                }
+            },
+            contact: {
+                create: {
+                    insta: host.contact.insta,
+                    face: host.contact.face,
+                    mobile: host.contact.mobile,
+                    email: host.contact.email,
+                    phones: {
+                        create: {
+                            ...host.contact.phones
                         }
                     }
                 }
             }
-        },
-        reviews: {
-            createMany: [
-                ...host.reviews
-            ]
         }
-    }
-    if (!host.roles) {
-        return prisma.host.create({
-            data: {
-                ...dataForCreation,
-                roles: {
-                    connect: [
-                        {name: 'HOST'}
-                    ]
-                }
-            }
-        });
-    }
-
-    else {
-        return prisma.host.create({
-            data: {
-                ...dataForCreation,
-                roles: host.roles
-            }
-        });
-    }
+    });
 }
 
 export async function loadById(id) {
@@ -111,14 +84,23 @@ export async function deleteHost(id) {
     return prisma.$transaction([deletePersonalData ,deleteUser])
 }
 
-export async function insertRating(host, rating) {
-    return prisma.host.update({
-        where: {
-            id: host.id
-        },
+export async function insertReview(hostId, userId, rating, text) {
+    const review = prisma.review.create({
         data: {
-            rating: (host.rating * host.timesRated + rating) / (host.timesRated + 1),
-            timesRated: host.timesRated + 1
+            postDate: new Date(),
+            rating: rating,
+            text: text
         }
     });
+    const save = prisma.reviewUserHost.create({
+        data: {
+            hostId: hostId,
+            userId: userId
+        }
+    });
+    return prisma.$transaction([save, review]);
+}
+
+export async function getRating(hostId) {
+
 }

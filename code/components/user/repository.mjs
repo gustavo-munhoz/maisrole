@@ -10,7 +10,6 @@ const USER_FIELDS = {
 }
 export async function signUser(user) {
     //INSERT -- ok
-    console.log(user)
     if (!user.roles){
         return prisma.user.create({
             data: {
@@ -110,10 +109,3 @@ export async function updateUser(user) {
     });
     return prisma.$transaction([updatePersonalData, updateUser])
 }
-/* TODO:
-    rate host
-    update rating
-    write review
-    delete review
-    show all reviews written
- */

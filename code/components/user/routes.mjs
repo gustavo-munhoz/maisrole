@@ -1,4 +1,4 @@
-import {getUser, login, rate, register, removeUser, saveUser} from "./service.mjs";
+import {getUser, login, register, removeUser, saveUser} from "./service.mjs";
 
 /**
  * @openapi
@@ -7,10 +7,10 @@ import {getUser, login, rate, register, removeUser, saveUser} from "./service.mj
  *     summary: "Registers a new user"
  *
  *     tags:
- *       - "profile"
+ *       - "userProfile"
  *
  *     operationId: userRegister
- *     x-eov-operation-handler: user/router
+ *     x-eov-operation-handler: user/routes
  *
  *     requestBody:
  *       required: true
@@ -28,7 +28,8 @@ import {getUser, login, rate, register, removeUser, saveUser} from "./service.mj
  */
 export async function userRegister(req, res, _) {
     const saved = await register(req.body);
-    return saved ? res.sendStatus(201) : res.sendStatus(400);}
+    return saved ? res.sendStatus(201) : res.sendStatus(400);
+}
 
 /**
  * @openapi
@@ -41,7 +42,7 @@ export async function userRegister(req, res, _) {
  *
  *     operationId: userLogin
  *
- *     x-eov-operation-handler: user/router
+ *     x-eov-operation-handler: user/routes
  *
  *     requestBody:
  *       required: true
@@ -70,10 +71,10 @@ export async function userLogin(req, res, _) {
  *     summary: "Retrieves user information"
  *
  *     tags:
- *       - "profile"
+ *       - "userProfile"
  *
  *     operationId: printUser
- *     x-eov-operation-handler: user/router
+ *     x-eov-operation-handler: user/routes
  *
  *     responses:
  *       '200':
@@ -99,10 +100,10 @@ export async function printUser(req, res, _) {
  *     summary: "Retrieves creators information"
  *
  *     tags:
- *       - "profile"
+ *       - "userProfile"
  *
  *     operationId: showCreators
- *     x-eov-operation-handler: user/router
+ *     x-eov-operation-handler: user/routes
  *
  *     responses:
  *       '200':
@@ -121,7 +122,7 @@ export async function showCreators(req, res, _) {
  *   delete:
  *     summary: "Deletes the current user"
  *     tags:
- *       - profile
+ *       - "userProfile"
  *
  *     operationId: deleteAccount
  *     x-eov-operation-handler: user/router
@@ -147,10 +148,10 @@ export async function deleteAccount(req, res, _) {
  *     summary: "Updates user information"
  *
  *     tags:
- *       - "profile"
+ *       - "userProfile"
  *
  *     operationId: updateAccount
- *     x-eov-operation-handler: user/router
+ *     x-eov-operation-handler: user/routes
  *
  *     requestBody:
  *       required: true
@@ -173,15 +174,4 @@ export async function deleteAccount(req, res, _) {
 export async function updateAccount(req, res, _) {
     const saved = await saveUser({id: req.user.id, ...req.body});
     return saved ? res.json({id: req.user.id, ...req.body}) : res.sendStatus(404);
-}
-
-/**
- * @openapi
- * /users/me/rating/{hostId}:
- *   put:
- *     summary: "Adds a rating to desired host"
- *
- */
-export async function userRateHost(req, res, _) {
-    const rated = await rate()
 }

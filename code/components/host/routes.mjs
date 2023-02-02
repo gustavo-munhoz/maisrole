@@ -1,4 +1,4 @@
-import {getUser, login, register, removeUser, saveUser} from "./service.mjs";
+import {getHost, login, register, removeHost, saveRating,} from "./service.mjs";
 
 /**
  * @openapi
@@ -9,24 +9,24 @@ import {getUser, login, register, removeUser, saveUser} from "./service.mjs";
  *     tags:
  *       - "profile"
  *
- *     operationId: userRegister
- *     x-eov-operation-handler: host/router
+ *     operationId: hostRegister
+ *     x-eov-operation-handler: host/routes
  *
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *              $ref: "#/components/schemas/Register"
+ *              $ref: "#/components/schemas/HostRegister"
  *     responses:
  *       '201':
- *         description: "User registered"
+ *         description: "Host registered"
  *       '400':
  *         description: "Invalid data provided"
  *       '401':
  *         description: "Registration failed"
  */
-export async function userRegister(req, res, _) {
+export async function hostRegister(req, res, _) {
     const saved = await register(req.body);
     return saved ? res.sendStatus(201) : res.sendStatus(400);}
 
@@ -41,7 +41,7 @@ export async function userRegister(req, res, _) {
  *
  *     operationId: userLogin
  *
- *     x-eov-operation-handler: host/router
+ *     x-eov-operation-handler: host/routes
  *
  *     requestBody:
  *       required: true
@@ -58,7 +58,7 @@ export async function userRegister(req, res, _) {
  *       '401':
  *         description: "Login failed"
  */
-export async function userLogin(req, res, _) {
+export async function hostLogin(req, res, _) {
     const user = await login(req.body);
     return user ? res.json(user) : res.sendStatus(401);
 }
@@ -85,10 +85,10 @@ export async function userLogin(req, res, _) {
  *       - {}
  *       - JWT: ['USER']
  */
-export async function printUser(req, res, _) {
+export async function printHost(req, res, _) {
     if (!req.user) res.send("Hello, guest!");
 
-    const user = await getUser(parseInt(req.user.id), true);
+    const user = await getHost(parseInt(req.user.id), true);
     return user ? res.json(user) : res.sendStatus(404);
 }
 
@@ -114,41 +114,11 @@ export async function printUser(req, res, _) {
  *       - JWT: ['USER']
  */
 export async function deleteAccount(req, res, _) {
-    const deleted = await removeUser(req.user.id);
+    const deleted = await removeHost(req.user.id);
     return deleted ? res.sendStatus(200) : res.sendStatus(404);
 }
 
-/**
- * @openapi
- * /host/me:
- *   put:
- *     summary: "Updates user information"
- *
- *     tags:
- *       - "profile"
- *
- *     operationId: updateAccount
- *     x-eov-operation-handler: host/router
- *
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *              $ref: "#/components/schemas/Update"
- *
- *     responses:
- *       '200':
- *         description: "User updated successfully"
- *       '400':
- *         description: "Invalid data provided"
- *       '404':
- *         description: "User not found"
- *
- *     security:
- *       - JWT: ['USER']
- */
-export async function updateAccount(req, res, _) {
-    const saved = await saveUser({id: req.user.id, ...req.body});
-    return saved ? res.json({id: req.user.id, ...req.body}) : res.sendStatus(404);
+
+export async function addRating(req, res, _) {
+    const rated = await saveRating()
 }

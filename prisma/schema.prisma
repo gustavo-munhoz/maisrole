@@ -39,13 +39,10 @@ model Host {
   id       Int              @id @default(autoincrement())
   hostName String
   password String
-  rating    Float
-  timesRated Int
-  address Address[]
-  contact Contact[]
+  address  Address[]
+  contact  Contact[]
   reviews  ReviewUserHost[]
 }
-
 
 model Address {
   id       Int    @id @default(autoincrement())
@@ -61,16 +58,16 @@ model Address {
 
 model Contact {
   id     Int     @id @default(autoincrement())
-  insta  String  @unique
-  face   String  @unique
-  mobile String  @unique
-  tel    Phone[]
+  insta  String?  @unique
+  face   String?  @unique
+  mobile String?   @unique
+  phones Phone[]
   email  String  @unique
   host   Host?   @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Phone {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   phone     String
   contact   Contact @relation(fields: [contactId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   contactId Int
@@ -90,6 +87,7 @@ model ReviewUserHost {
 model Review {
   id         Int              @id @default(autoincrement())
   postDate   String
-  text       String
+  rating     Int
+  text       String?
   connection ReviewUserHost[]
 }
