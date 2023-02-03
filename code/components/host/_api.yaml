@@ -97,47 +97,92 @@ components:
       required:
         - username
         - password
-        - personalData
+        - hostName
+        - contact
       properties:
-        username:
+        email:
           type: string
           minLength: 5
-          maxLength: 30
-          example: johndoe
-          pattern: '^(?!.*\s)(?!.*[!@#\$%^&*(),.?":{}|<>])[A-Za-z\d]'
+          maxLength: 100
+          example: john.doe@email.com
         password:
           type: string
           pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*(),.?":{}|<>])[A-Za-z\d!@#\$%^&*(),.?":{}|<>]'
           minLength: 8
-          example: $3crEt!z
-        personalData:
+          example: mYp@s$w0rd
+        hostName:
+          type: string
+          minLength: 1
+          maxLength: 30
+          example: Bar do Juquinha
+        contact:
           type: object
           required:
-            - firstName
-            - lastName
-            - cellNumber
             - email
+            - phones
           properties:
-            firstName:
-              type: string
-              minLength: 3
-              maxLength: 30
-              example: John
-            lastName:
-              type: string
-              minLength: 3
-              maxLength: 30
-              example: Doe
-            cellNumber:
-              type: string
-              minLength: 8
-              maxLength: 20
-              example: +55 (11) 98205-6580
             email:
               type: string
-              minLength: 10
-              maxLength: 50
-              example: newemail@gmail.com
+              minLength: 5
+              maxLength: 100
+              example: john.doe@email.com.br
+            phones:
+              type: object
+              required:
+                - phone
+              properties:
+                phone:
+                  type: string
+                  minLength: 8
+                  maxLength: 25
+                  example: +55 (41) 98782-6083
+        address:
+          type: object
+          required:
+            - street
+            - number
+            - cep
+            - district
+            - city
+            - state
+          properties:
+            street:
+              type: string
+              example: Rua Argentina
+            number:
+              type: string
+              example: +55 (41) 98754-3210
+            cep:
+              type: string
+              example: 82340-210
+            district:
+              type: string
+              example: Bairro Baixo
+            city:
+              type: string
+              example: Curitiba
+            state:
+              type: string
+              example: Paraná
+
+    Review:
+      type: object
+      required:
+        - hostId
+        - rating
+      properties:
+        hostId:
+          type: integer
+          example: 1
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+          example: 5
+        text:
+          type: string
+          maxLength: 350
+          example: Great place to have sex!
 
     Id:
       type: integer

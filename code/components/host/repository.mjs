@@ -5,43 +5,60 @@ const HOST_FIELDS = {
     id: true,
     hostName: true,
     password: false,
-    rating: true,
-    timesRated: true,
     address: true,
     contact: true,
     reviews: true,
+    roles: true
 }
 
 export async function signHost(host) {
-    return prisma.host.create({
-        data: {
-            hostName: host.hostName,
-            password: await bcrypt.hash(host.password, await bcrypt.genSalt()),
-            address: {
-                create: {
-                    street: host.address.street,
-                    number: host.address.number,
-                    cep: host.address.cep,
-                    district: host.address.district,
-                    city: host.address.state,
-                    state: host.address.state
-                }
-            },
-            contact: {
-                create: {
-                    insta: host.contact.insta,
-                    face: host.contact.face,
-                    mobile: host.contact.mobile,
-                    email: host.contact.email,
-                    phones: {
-                        create: {
-                            ...host.contact.phones
-                        }
+    const dataForCreation = {
+        hostName: host.hostName,
+        password: await bcrypt.hash(host.password, await bcrypt.genSalt()),
+        address: {
+            create: {
+                street: host.address.street,
+                number: host.address.number,
+                cep: host.address.cep,
+                district: host.address.district,
+                city: host.address.state,
+                state: host.address.state
+            }
+        },
+        contact: {
+            create: {
+                insta: host.contact.insta,
+                face: host.contact.face,
+                mobile: host.contact.mobile,
+                email: host.contact.email,
+                phones: {
+                    create: {
+                        ...host.contact.phones
                     }
                 }
             }
         }
-    });
+    }
+    if (!host.roles) {
+        return prisma.host.create({
+            data: {
+                ...dataForCreation,
+                roles: {
+                    connect: [
+                        {name: 'HOST'}
+                    ]
+                }
+            }
+        });
+    }
+    else {
+        return prisma.host.create({
+            data: {
+                ...dataForCreation,
+                roles: host.roles
+            }
+        });
+    }
 }
 
 export async function loadById(id) {
@@ -51,16 +68,19 @@ export async function loadById(id) {
 
 export async function loadByCredentials(email, password) {
     // SELECT WHERE email AND password -- ok
-    const host = await prisma.host.findUnique({
+    const host = await prisma.host.findFirst({
         where: {
             contact: {
-                email: email
+                some: {
+                    email: email
+                }
             }
         },
         select: {
             ...HOST_FIELDS,
             password: true
-        }});
+        }
+    });
     if (!host) return null
 
     if (!await bcrypt.compare(password, host.password)){

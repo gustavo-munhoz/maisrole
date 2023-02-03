@@ -18,9 +18,9 @@ export async function getHost(id) {
     return loadById(id);
 }
 
-export async function removeHost(id){
+export async function removeHost(id) {
     return deleteHost(id);
 }
-export async function saveRating(host, rating) {
-    return insertReview(host, rating);
+export async function saveReview(hostId, userId, rating, text) {
+    return insertReview(hostId, userId, rating, text);
 }

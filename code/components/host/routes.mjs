@@ -1,4 +1,5 @@
-import {getHost, login, register, removeHost, saveRating,} from "./service.mjs";
+import {getHost, login, register, removeHost, saveHost, saveReview,} from "./service.mjs";
+import {saveUser} from "../user/service.mjs";
 
 /**
  * @openapi
@@ -32,7 +33,7 @@ export async function hostRegister(req, res, _) {
 
 /**
  * @openapi
- * /host/login:
+ * /hosts/login:
  *   post:
  *     summary: "Logs in the user"
  *
@@ -48,31 +49,31 @@ export async function hostRegister(req, res, _) {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/UsernamePassword"
+ *             $ref: "#/components/schemas/EmailPassword"
  *
  *     responses:
  *       '200':
- *         description: "User logged in"
+ *         description: "Host logged in"
  *       '400':
  *         description: "Invalid data provided"
  *       '401':
  *         description: "Login failed"
  */
 export async function hostLogin(req, res, _) {
-    const user = await login(req.body);
-    return user ? res.json(user) : res.sendStatus(401);
+    const host = await login(req.body);
+    return host ? res.json(host) : res.sendStatus(401);
 }
 
 /**
  * @openapi
- * /host/me:
+ * /hosts/me:
  *   get:
  *     summary: "Retrieves user information"
  *
  *     tags:
  *       - "hostProfile"
  *
- *     operationId: printUser
+ *     operationId: printHost
  *     x-eov-operation-handler: host/routes
  *
  *     responses:
@@ -83,7 +84,7 @@ export async function hostLogin(req, res, _) {
  *
  *     security:
  *       - {}
- *       - JWT: ['USER']
+ *       - JWT: ['HOST']
  */
 export async function printHost(req, res, _) {
     if (!req.user) res.send("Hello, guest!");
@@ -95,7 +96,7 @@ export async function printHost(req, res, _) {
 
 /**
  * @openapi
- * /host/me:
+ * /hosts/me:
  *   delete:
  *     summary: "Deletes the current user"
  *     tags:
@@ -119,6 +120,32 @@ export async function deleteAccount(req, res, _) {
 }
 
 
-export async function addRating(req, res, _) {
-    const rated = await saveRating()
+/**
+ * @openapi
+ * /hosts/{hostId}/reviews:
+ *   post:
+ *     summary: "Adds a review to target host"
+ *     tags:
+ *       - "hostProfile"
+ *
+ *     operationId: addReview
+ *     x-eov-operation-handler: host/routes
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Review"
+ *
+ *     responses:
+ *       '201':
+ *         description: 'Created review'
+ *
+ *
+ */
+export async function addReview(req, res, _) {
+    console.log(req.body);
+    const rated = await saveReview(req.body.hostId, req.user.id, req.body.rating, req.body.text = null);
+    return rated ? res.json(rated) : res.sendStatus(400);
 }

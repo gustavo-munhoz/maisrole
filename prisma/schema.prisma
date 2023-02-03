@@ -19,6 +19,16 @@ model User {
   reviews      ReviewUserHost[]
 }
 
+model Host {
+  id       Int              @id @default(autoincrement())
+  hostName String
+  password String
+  address  Address[]
+  contact  Contact[]
+  reviews  ReviewUserHost[]
+  roles    Role[]
+}
+
 model personalData {
   id          Int     @id @default(autoincrement())
   cellNumber  String?
@@ -33,15 +43,7 @@ model personalData {
 model Role {
   name  String @id
   users User[]
-}
-
-model Host {
-  id       Int              @id @default(autoincrement())
-  hostName String
-  password String
-  address  Address[]
-  contact  Contact[]
-  reviews  ReviewUserHost[]
+  hosts Host[]
 }
 
 model Address {
