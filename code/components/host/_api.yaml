@@ -1,22 +1,22 @@
 tags:
-  - name: HostProfile
+  - name: hostProfile
     description: Host information
   - name: auth
     description: Authentication routes
 
 components:
   schemas:
-    UsernamePassword:
+    EmailPassword:
       type: object
       required:
-        - username
+        - email
         - password
       properties:
-        username:
+        email:
           type: string
           minLength: 5
-          maxLength: 30
-          example: johndoe
+          maxLength: 100
+          example: john.doe@email.com
         password:
           type: string
           example: mYp@s$w0rd
@@ -92,10 +92,11 @@ components:
             state:
               type: string
               example: Paraná
+
     Update:
       type: object
       required:
-        - username
+        - email
         - password
         - hostName
         - contact

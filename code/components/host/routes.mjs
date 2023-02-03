@@ -38,7 +38,7 @@ export async function hostRegister(req, res, _) {
  *     summary: "Logs in the user"
  *
  *     tags:
- *       - "auth"
+ *       - "hostAuth"
  *
  *     operationId: hostLogin
  *
@@ -88,7 +88,6 @@ export async function hostLogin(req, res, _) {
  */
 export async function printHost(req, res, _) {
     if (!req.user) res.send("Hello, guest!");
-
     const user = await getHost(parseInt(req.user.id), true);
     return user ? res.json(user) : res.sendStatus(404);
 }
@@ -98,7 +97,7 @@ export async function printHost(req, res, _) {
  * @openapi
  * /hosts/me:
  *   delete:
- *     summary: "Deletes the current user"
+ *     summary: "Deletes the current Host"
  *     tags:
  *       - "hostProfile"
  *
@@ -112,7 +111,7 @@ export async function printHost(req, res, _) {
  *         description: "Host not found"
  *
  *     security:
- *       - JWT: ['USER']
+ *       - JWT: ['HOST']
  */
 export async function deleteAccount(req, res, _) {
     const deleted = await removeHost(req.user.id);
@@ -148,4 +147,40 @@ export async function addReview(req, res, _) {
     console.log(req.body);
     const rated = await saveReview(req.body.hostId, req.user.id, req.body.rating, req.body.text = null);
     return rated ? res.json(rated) : res.sendStatus(400);
+}
+
+/**
+ * @openapi
+ * /hosts/me:
+ *   put:
+ *     summary: "Updates user information"
+ *
+ *     tags:
+ *       - "hostProfile"
+ *
+ *     operationId: updateAccount
+ *     x-eov-operation-handler: host/routes
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *              $ref: "#/components/schemas/Update"
+ *
+ *     responses:
+ *       '200':
+ *         description: "User updated successfully"
+ *       '400':
+ *         description: "Invalid data provided"
+ *       '404':
+ *         description: "Host not found"
+ *
+ *     security:
+ *       - JWT: ['HOST']
+ */
+
+export async function updateInfo(req, res, _) {
+    const saved = await saveHost({id: req.user.id, ...req.body});
+    return saved ? res.json({id: req.user.id, ...req.body}) : res.sendStatus(404);
 }

@@ -49,7 +49,6 @@ export async function signUser(user) {
         });
     }
 }
-
 export async function loadById(id) {
     // SELECT WHERE id -- ok
     return prisma.user.findUnique({where: {id}, select: {...USER_FIELDS} });
