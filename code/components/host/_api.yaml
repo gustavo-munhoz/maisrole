@@ -183,7 +183,7 @@ components:
         text:
           type: string
           maxLength: 350
-          example: Great place to have sex!
+          example: Great place!
 
     Id:
       type: integer

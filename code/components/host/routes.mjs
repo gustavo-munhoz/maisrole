@@ -144,7 +144,6 @@ export async function deleteAccount(req, res, _) {
  *
  */
 export async function addReview(req, res, _) {
-    console.log(req.body);
     const rated = await saveReview(req.body.hostId, req.user.id, req.body.rating, req.body.text = null);
     return rated ? res.json(rated) : res.sendStatus(400);
 }
