@@ -6,7 +6,7 @@ const USER_FIELDS = {
     username: true,
     password: false,
     personalData: true,
-    roles: true
+    roles: truewor
 }
 export async function signUser(user) {
     //INSERT -- ok
@@ -70,7 +70,7 @@ export async function loadByCredentials(username, password) {
 }
 export async function deleteUser(id) {
     //DELETE -- ok
-    const deletePersonalData = prisma.personalData.delete({
+    const deletePersonalData = prisma.userPersonalData.delete({
         where: {
             userId: id
         }
@@ -84,7 +84,7 @@ export async function deleteUser(id) {
 
 export async function updateUser(user) {
     //UPDATE
-    const updatePersonalData = prisma.personalData.update({
+    const updatePersonalData = prisma.userPersonalData.update({
         where: {
             userId: user.id
             },
@@ -107,4 +107,12 @@ export async function updateUser(user) {
         }
     });
     return prisma.$transaction([updatePersonalData, updateUser])
+}
+
+export async function filterReviewsByUser(id) {
+    return prisma.review.findMany({
+        where: {
+            userId: id
+        }
+    });
 }

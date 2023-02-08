@@ -1,4 +1,4 @@
-import {getUser, login, register, removeUser, saveUser} from "./service.mjs";
+import {getReviewsByUser, getUser, login, register, removeUser, saveUser} from "./service.mjs";
 
 /**
  * @openapi
@@ -174,4 +174,34 @@ export async function deleteAccount(req, res, _) {
 export async function updateAccount(req, res, _) {
     const saved = await saveUser({id: req.user.id, ...req.body});
     return saved ? res.json({id: req.user.id, ...req.body}) : res.sendStatus(404);
+}
+
+/**
+ * @openapi
+ * /users/{id}/reviews:
+ *  get:
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *
+ *    summary: "Get all reviews made by user"
+ *    tags:
+ *      - "hostReviews"
+ *
+ *    operationId: showReviewsByUser
+ *    x-eov-operation-handler: user/routes
+ *
+ *    responses:
+ *     '200':
+ *       description: "Returns reviews"
+ *     '404':
+ *       description: "User not found"
+ *
+ */
+export async function showReviewsByUser(req, res, _) {
+    const reviews = await getReviewsByUser(req.params.id);
+    return reviews.length !== 0 ? res.json(reviews) : res.sendStatus(404)
 }

@@ -1,6 +1,6 @@
 import {
     deleteHost, getRating,
-    getReviews,
+    filterReviewsByHost,
     insertReview,
     loadByCredentials,
     loadById,
@@ -41,6 +41,6 @@ export async function saveHost(host) {
     return updateHost(host);
 }
 
-export async function hostReviews(id) {
-    return getReviews(id);
+export async function getReviewsByHost(id) {
+    return filterReviewsByHost(id);
 }

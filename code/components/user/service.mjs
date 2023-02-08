@@ -1,5 +1,5 @@
 import { createToken } from "../../lib/security.mjs";
-import {deleteUser, loadByCredentials, loadById, signUser, updateUser} from "./repository.mjs";
+import {deleteUser, filterReviewsByUser, loadByCredentials, loadById, signUser, updateUser} from "./repository.mjs";
 
 export async function register(user) {
     if (!user.id) return signUser(user);
@@ -24,4 +24,8 @@ export async function removeUser(id){
 
 export async function saveUser(user) {
     return updateUser(user);
+}
+
+export async function getReviewsByUser(id) {
+    return filterReviewsByUser(id);
 }

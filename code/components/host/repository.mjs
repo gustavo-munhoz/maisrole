@@ -11,7 +11,6 @@ const HOST_FIELDS = {
     roles: true
 }
 
-
 export async function signHost(host) {
     if (!await prisma.hostContact.findUnique({where: {email: host.email}})) {
         const dataForCreation = {
@@ -154,10 +153,10 @@ export async function getRating(id) {
         (ratings.reduce((a, e) => a + e.rating, 0) / ratings.length).toFixed(2));
 }
 
-export async function getReviews(hostId) {
+export async function filterReviewsByHost(id) {
     return prisma.review.findMany({
         where: {
-            hostId: hostId
+            hostId: id
         }
     });
 }

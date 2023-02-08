@@ -1,4 +1,4 @@
-import {getHost, hostReviews, login, register, removeHost, saveHost, saveReview, showRating,} from "./service.mjs";
+import {getHost, getReviewsByHost, login, register, removeHost, saveHost, saveReview, showRating,} from "./service.mjs";
 
 /**
  * @openapi
@@ -204,11 +204,11 @@ export async function addReview(req, res, _) {
  *        schema:
  *          type: integer
  *
- *    summary: "Get all reviews"
+ *    summary: "Get all reviews made to host"
  *    tags:
  *      - "hostReviews"
  *
- *    operationId: allReviews
+ *    operationId: showReviewsByHost
  *    x-eov-operation-handler: host/routes
  *
  *    responses:
@@ -218,9 +218,9 @@ export async function addReview(req, res, _) {
  *       description: "Host not found"
  *
  */
-export async function allReviews(req, res, _) {
-    const all = await hostReviews(req.params.id)
-    return all ? res.json(all) : res.sendStatus(404)
+export async function showReviewsByHost(req, res, _) {
+    const reviews = await getReviewsByHost(req.params.id);
+    return reviews.length !== 0 ? res.json(reviews) : res.sendStatus(404)
 }
 
 /**
