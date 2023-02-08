@@ -10,7 +10,8 @@ const HOST_FIELDS = {
     reviews: true,
     roles: true
 }
-// OK
+
+
 export async function signHost(host) {
     if (!await prisma.contact.findUnique({where: {email: host.email}})) {
         const dataForCreation = {
@@ -64,15 +65,11 @@ export async function signHost(host) {
     else return null;
 }
 
-// OK
 export async function loadById(id) {
-    // SELECT WHERE id -- ok
     return prisma.host.findUnique({where: {id}, select: {...HOST_FIELDS}});
 }
 
-// OK
 export async function loadByCredentials(email, password) {
-    // SELECT WHERE email AND password -- ok
     const host = await prisma.host.findFirst({
         where: {
             contact: {
@@ -95,7 +92,6 @@ export async function loadByCredentials(email, password) {
     return host;
 }
 
-// OK
 export async function deleteHost(id) {
     const deletePhone = prisma.phone.deleteMany({
         where: {id: id}
@@ -174,43 +170,11 @@ export async function getRating(id) {
     }).then(ratings =>
         ratings.reduce((a, e) => a + e.rating, 0) / ratings.length);
 }
-//TEST
-export async function updateHost(host){
-    const updatePhone = prisma.phone.update({
+
+export async function getReviews(hostId) {
+    return prisma.review.findMany({
         where: {
-            id: host.id
-        },
-        data: {
-            ...host.contact.phones
+            hostId: hostId
         }
     });
-
-    const updateContact = prisma.contact.update({
-        where: {
-            id: host.id
-        },
-        data: {
-            ...host.contact
-        }
-    });
-
-    const updateAddress = prisma.address.update({
-        where: {
-            id: host.id
-        },
-        data: {
-            ...host.address
-        }
-    });
-
-    const updateHost = prisma.host.update({
-        where: {
-            id: host.id
-        },
-        data: {
-            ...host
-        }
-    })
-
-    return prisma.$transaction([updatePhone, updateContact, updateAddress, updateHost])
 }

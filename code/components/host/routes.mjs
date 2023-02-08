@@ -1,4 +1,4 @@
-import {getHost, login, register, removeHost, saveHost, saveReview,} from "./service.mjs";
+import {getHost, hostReviews, login, register, removeHost, saveHost, saveReview, showRating,} from "./service.mjs";
 import {saveUser} from "../user/service.mjs";
 
 /**
