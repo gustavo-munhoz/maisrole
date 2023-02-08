@@ -1,8 +1,10 @@
 tags:
   - name: hostProfile
-    description: Host information
-  - name: auth
+    description: Host profile information
+  - name: hostAuth
     description: Authentication routes
+  - name: hostReviews
+    description: Review information added by users
 
 components:
   schemas:

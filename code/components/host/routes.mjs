@@ -35,7 +35,7 @@ export async function hostRegister(req, res, _) {
  * @openapi
  * /hosts/login:
  *   post:
- *     summary: "Logs in the user"
+ *     summary: "Logs the host in"
  *
  *     tags:
  *       - "hostAuth"
@@ -68,7 +68,7 @@ export async function hostLogin(req, res, _) {
  * @openapi
  * /hosts/me:
  *   get:
- *     summary: "Retrieves user information"
+ *     summary: "Retrieves host information"
  *
  *     tags:
  *       - "hostProfile"
@@ -88,6 +88,7 @@ export async function hostLogin(req, res, _) {
  */
 export async function printHost(req, res, _) {
     if (!req.user) res.send("Hello, guest!");
+
     const user = await getHost(parseInt(req.user.id), true);
     return user ? res.json(user) : res.sendStatus(404);
 }
@@ -118,41 +119,11 @@ export async function deleteAccount(req, res, _) {
     return deleted ? res.sendStatus(200) : res.sendStatus(404);
 }
 
-
-/**
- * @openapi
- * /hosts/{hostId}/reviews:
- *   post:
- *     summary: "Adds a review to target host"
- *     tags:
- *       - "hostProfile"
- *
- *     operationId: addReview
- *     x-eov-operation-handler: host/routes
- *
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: "#/components/schemas/Review"
- *
- *     responses:
- *       '201':
- *         description: 'Created review'
- *
- *
- */
-export async function addReview(req, res, _) {
-    const rated = await saveReview(req.body.hostId, req.user.id, req.body.rating, req.body.text = null);
-    return rated ? res.json(rated) : res.sendStatus(400);
-}
-
 /**
  * @openapi
  * /hosts/me:
  *   put:
- *     summary: "Updates user information"
+ *     summary: "Updates host information"
  *
  *     tags:
  *       - "hostProfile"
@@ -182,4 +153,96 @@ export async function addReview(req, res, _) {
 export async function updateInfo(req, res, _) {
     const saved = await saveHost({id: req.user.id, ...req.body});
     return saved ? res.json({id: req.user.id, ...req.body}) : res.sendStatus(404);
+}
+
+/**
+ * @openapi
+ * /hosts/{id}/reviews:
+ *   post:
+ *     summary: "Adds a review to target host"
+ *     tags:
+ *       - "hostReviews"
+ *
+ *     operationId: addReview
+ *     x-eov-operation-handler: host/routes
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Review"
+ *
+ *     responses:
+ *       '201':
+ *         description: 'Created review'
+ *
+ *     security:
+ *       - JWT: ['USER']
+ *
+ */
+export async function addReview(req, res, _) {
+    const rated = await saveReview(req.body.hostId, req.user.id, req.body.rating, req.body.text);
+    return rated ? res.json(rated) : res.sendStatus(400);
+}
+
+/**
+ * @openapi
+ * /hosts/{id}/reviews:
+ *  get:
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *
+ *    summary: "Get all reviews"
+ *    tags:
+ *      - "hostReviews"
+ *
+ *    operationId: allReviews
+ *    x-eov-operation-handler: host/routes
+ *
+ *    responses:
+ *     '200':
+ *       description: "Returns reviews"
+ *     '404':
+ *       description: "Host not found"
+ *
+ */
+export async function allReviews(req, res, _) {
+    const all = await hostReviews(req.params.id)
+    return all ? res.json(all) : res.sendStatus(400)
+}
+
+/**
+ * @openapi
+ * /hosts/{id}/rating:
+ *   get:
+ *     summary: Get the rating of a host by ID
+ *
+ *     tags:
+ *       - hostReviews
+ *
+ *     operationId: printRating
+ *     x-eov-operation-handler: host/routes
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the host to get rating
+ *
+ *     responses:
+ *       '200':
+ *         description: "Returned rating"
+ *       '404':
+ *         description: "Host not found"
+ */
+export async function printRating(req, res, _) {
+    const rating = await showRating(req.params.id);
+    return rating ? res.json({rating}) : res.sendStatus(404);
 }

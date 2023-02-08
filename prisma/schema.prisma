@@ -11,22 +11,22 @@ datasource db {
 }
 
 model User {
-  id           Int              @id @default(autoincrement())
-  username     String           @unique
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
   password     String
   personalData personalData?
   roles        Role[]
-  reviews      ReviewUserHost[]
+  reviews      Review[]
 }
 
 model Host {
-  id       Int              @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   hostName String
   password String
   address  Address[]
   contact  Contact[]
-  reviews  ReviewUserHost[]
   roles    Role[]
+  reviews  Review[]
 }
 
 model personalData {
@@ -75,21 +75,15 @@ model Phone {
   contactId Int
 }
 
-model ReviewUserHost {
-  userId   Int
-  user     User?   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  hostId   Int
-  host     Host?   @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  reviewId Int
-  review   Review? @relation(fields: [reviewId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-
-  @@id([userId, hostId, reviewId])
-}
-
 model Review {
-  id         Int              @id @default(autoincrement())
-  postDate   String
-  rating     Int
-  text       String?
-  connection ReviewUserHost[]
+  id       Int     @default(autoincrement())
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  hostId   Int
+  host     Host    @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  postDate String
+  rating   Int
+  text     String?
+
+  @@id([id, userId, hostId])
 }

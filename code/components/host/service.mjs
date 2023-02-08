@@ -25,6 +25,10 @@ export async function saveReview(hostId, userId, rating, text) {
     return insertReview(hostId, userId, rating, text);
 }
 
+export async function showRating(id) {
+    return getRating(id);
+}
+
 export async function saveHost(host) {
     return updateHost(host);
 }

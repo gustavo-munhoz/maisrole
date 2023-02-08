@@ -35,10 +35,10 @@ export async function userRegister(req, res, _) {
  * @openapi
  * /user/login:
  *   post:
- *     summary: "Logs in the user"
+ *     summary: "Logs the user in"
  *
  *     tags:
- *       - "auth"
+ *       - "userAuth"
  *
  *     operationId: userLogin
  *

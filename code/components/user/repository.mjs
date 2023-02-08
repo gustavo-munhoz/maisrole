@@ -79,7 +79,7 @@ export async function deleteUser(id) {
         where: {
             id: id
         }});
-    return prisma.$transaction([deletePersonalData ,deleteUser])
+    return prisma.$transaction([deletePersonalData, deleteUser])
 }
 
 export async function updateUser(user) {
