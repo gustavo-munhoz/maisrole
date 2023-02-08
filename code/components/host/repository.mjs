@@ -13,7 +13,7 @@ const HOST_FIELDS = {
 
 
 export async function signHost(host) {
-    if (!await prisma.contact.findUnique({where: {email: host.email}})) {
+    if (!await prisma.hostContact.findUnique({where: {email: host.email}})) {
         const dataForCreation = {
             hostName: host.hostName,
             password: await bcrypt.hash(host.password, await bcrypt.genSalt()),
@@ -33,11 +33,7 @@ export async function signHost(host) {
                     face: host.contact.face,
                     mobile: host.contact.mobile,
                     email: host.contact.email,
-                    phones: {
-                        create: {
-                            ...host.contact.phones
-                        }
-                    }
+                    phone: host.contact.phone
                 }
             }
         }
@@ -93,14 +89,10 @@ export async function loadByCredentials(email, password) {
 }
 
 export async function deleteHost(id) {
-    const deletePhone = prisma.phone.deleteMany({
+    const deleteContact = prisma.hostContact.delete({
         where: {id: id}
     });
-
-    const deleteContact = prisma.contact.delete({
-        where: {id: id}
-    });
-    const deleteAddress = prisma.address.delete({
+    const deleteAddress = prisma.hostAddress.delete({
         where: {id: id}
     });
 
@@ -108,20 +100,11 @@ export async function deleteHost(id) {
         where: {id: id}
     });
 
-    return prisma.$transaction([deletePhone, deleteContact, deleteAddress, deleteUser])
+    return prisma.$transaction([deleteContact, deleteAddress, deleteUser])
 }
 
 export async function updateHost(host){
-    const updatePhone = prisma.phone.update({
-        where: {
-            id: host.id
-        },
-        data: {
-            ...host.contact.phones
-        }
-    });
-
-    const updateContact = prisma.contact.update({
+    const updateContact = prisma.hostContact.update({
         where: {
             id: host.id
         },
@@ -130,7 +113,7 @@ export async function updateHost(host){
         }
     });
 
-    const updateAddress = prisma.address.update({
+    const updateAddress = prisma.hostAddress.update({
         where: {
             id: host.id
         },
@@ -148,7 +131,7 @@ export async function updateHost(host){
         }
     })
 
-    return prisma.$transaction([updatePhone, updateContact, updateAddress, updateHost])
+    return prisma.$transaction([updateContact, updateAddress, updateHost])
 }
 
 export async function insertReview(hostId, userId, rating, text) {
@@ -168,7 +151,7 @@ export async function getRating(id) {
         where: {hostId: id},
         select: {rating: true}
     }).then(ratings =>
-        ratings.reduce((a, e) => a + e.rating, 0) / ratings.length);
+        (ratings.reduce((a, e) => a + e.rating, 0) / ratings.length).toFixed(2));
 }
 
 export async function getReviews(hostId) {

@@ -1,5 +1,4 @@
 import {getHost, hostReviews, login, register, removeHost, saveHost, saveReview, showRating,} from "./service.mjs";
-import {saveUser} from "../user/service.mjs";
 
 /**
  * @openapi
@@ -173,6 +172,14 @@ export async function updateInfo(req, res, _) {
  *           schema:
  *             $ref: "#/components/schemas/Review"
  *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the host to post review
+ *
  *     responses:
  *       '201':
  *         description: 'Created review'
@@ -182,7 +189,7 @@ export async function updateInfo(req, res, _) {
  *
  */
 export async function addReview(req, res, _) {
-    const rated = await saveReview(req.body.hostId, req.user.id, req.body.rating, req.body.text);
+    const rated = await saveReview(req.params.id, req.user.id, req.body.rating, req.body.text);
     return rated ? res.json(rated) : res.sendStatus(400);
 }
 
@@ -213,7 +220,7 @@ export async function addReview(req, res, _) {
  */
 export async function allReviews(req, res, _) {
     const all = await hostReviews(req.params.id)
-    return all ? res.json(all) : res.sendStatus(400)
+    return all ? res.json(all) : res.sendStatus(404)
 }
 
 /**
