@@ -1,4 +1,5 @@
-import {getHost, getReviewsByHost, login, register, removeHost, saveHost, saveReview, showRating,} from "./service.mjs";
+import {getHost, getReviewsByHost, login, register, removeHost, saveHost, saveReview, showRating, create} from "./service.mjs";
+
 
 /**
  * @openapi
@@ -40,7 +41,6 @@ export async function hostRegister(req, res, _) {
  *       - "hostAuth"
  *
  *     operationId: hostLogin
- *
  *     x-eov-operation-handler: host/routes
  *
  *     requestBody:
@@ -252,4 +252,34 @@ export async function showReviewsByHost(req, res, _) {
 export async function printRating(req, res, _) {
     const rating = await showRating(req.params.id);
     return rating ? res.json({rating}) : res.sendStatus(404);
+}
+
+/**
+ * @openapi
+ * /hosts/me/events:
+ *   post:
+ *     summary: "Create event"
+ *
+ *     tags:
+ *       - "event"
+ *     operationId: createEvent
+ *     x-eov-operation-handler: event/routes
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *         schema:
+ *              $ref: "#/components/schemas/CreateEvent"
+ *
+ *     responses:
+ *       '201':
+ *         description: "Event created!"
+ *       '400':
+ *         description: "Invalid data provided"
+ *
+ */
+export async function createEvent(req, res, _) {
+    const created = await create(req.user.id, req.body);
+    return created ? res.json(created) : res.sendStatus(400);
 }

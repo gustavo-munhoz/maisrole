@@ -8,6 +8,7 @@ import {
     updateHost
 } from "./repository.mjs";
 import {createToken} from "../../lib/security.mjs";
+import {insertEvent} from "../event/repository.mjs";
 
 export async function register(host) {
     return signHost(host);
@@ -43,4 +44,8 @@ export async function saveHost(host) {
 
 export async function getReviewsByHost(id) {
     return filterReviewsByHost(id);
+}
+
+export async function create(hostId, event) {
+    return insertEvent(hostId, event);
 }

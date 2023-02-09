@@ -5,6 +5,8 @@ tags:
     description: Authentication routes
   - name: hostReviews
     description: Review information added by users
+  - name: event
+    description: Event properties
 
 components:
   schemas:
@@ -197,3 +199,25 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  CreateEvent:
+    type: Object
+    required:
+      - startDate
+      - endDate
+      - price
+      - brief
+    properties:
+      startDate:
+        type: String # YYYY-MM-DD
+        pattern: '/\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])*/'
+        example: 2023-03-13
+      endDate:
+        type: String
+        pattern: '/\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])*/'
+        example: 2023-03-17
+      price:
+        type: Float
+      brief:
+        type: String
+        example: Evento legal que vai acontecer =)

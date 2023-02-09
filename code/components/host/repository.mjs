@@ -160,3 +160,16 @@ export async function filterReviewsByHost(id) {
         }
     });
 }
+
+export async function insertEvent(hostId, event) {
+    return prisma.event.create({
+        data: {
+            hostId: hostId,
+            startDate: new Date(event.startDate),
+            endDate: new Date(event.endDate),
+            price: event.price,
+            brief: event.brief,
+            status: 0
+        }
+    });
+}

@@ -418,10 +418,80 @@ async function populateDatabase() {
     }
 }
 
+async function makeStatus() {
+    const exists = await prisma.eventState.findMany();
+    if (exists.length === 0) {
+        await prisma.eventState.createMany({
+            data: [
+                {
+                    id: 0,
+                    status: "To begin"
+                },
+                {
+                    id: 1,
+                    status: "Occurring"
+                },
+                {
+                    id: 2,
+                    status: "Ended"
+                }
+            ]
+        });
+        info({description: "Status created!"});
+    }
+    else {
+        debug({description: "Status found!"});
+    }
+}
+
+async function makeWeekdays() {
+    const exists = await prisma.weekDay.findMany();
+    if (exists.length === 0) {
+        await prisma.weekDay.createMany({
+            data: [
+                {
+                    id: 0,
+                    day: "Sunday"
+                },
+                {
+                    id: 1,
+                    day: "Monday"
+                },
+                {
+                    id: 2,
+                    day: "Tuesday"
+                },
+                {
+                    id: 3,
+                    day: "Wednesday"
+                },
+                {
+                    id: 4,
+                    day: "Thursday"
+                },
+                {
+                    id: 5,
+                    day: "Friday"
+                },
+                {
+                    id: 6,
+                    day: "Saturday"
+                },
+            ]
+        });
+        info({description: "Week Days created!"});
+    }
+    else {
+         debug({description: "Week Days found!"});
+    }
+}
+
 export async function bootstrapDb() {
     debug({description: "Checking initial data..."});
     await makeRole('ADMIN');
     await makeRole('USER');
     await makeRole('HOST');
     await populateDatabase();
+    await makeStatus();
+    await makeWeekdays();
 }
