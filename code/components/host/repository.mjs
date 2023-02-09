@@ -162,14 +162,22 @@ export async function filterReviewsByHost(id) {
 }
 
 export async function insertEvent(hostId, event) {
+    let id = 0;
+    const now = new Date();
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+
+    // comparar datas para dar o state autoamtico
+    if (startDate > now && endDate > now)
     return prisma.event.create({
         data: {
+            name: event.name,
             hostId: hostId,
             startDate: new Date(event.startDate),
             endDate: new Date(event.endDate),
             price: event.price,
             brief: event.brief,
-            status: 0
+            stateId: id
         }
     });
 }
