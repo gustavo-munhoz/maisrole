@@ -39,11 +39,3 @@ export async function readEvent(id) {
     });
 }
 
-export async function deleteEvent(id) {
-    return prisma.event.delete({where: {id: id}});
-}
-
-export async function updateEvent(id, newData) {
-    return prisma.event.update({where: {id: id}, data: newData});
-}
-

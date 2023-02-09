@@ -1,4 +1,14 @@
-import {getHost, getReviewsByHost, login, register, removeHost, saveHost, saveReview, showRating, create} from "./service.mjs";
+import {
+    getHost,
+    getReviewsByHost,
+    login,
+    register,
+    removeHost,
+    saveHost,
+    saveReview,
+    showRating,
+    registerEvent
+} from "./service.mjs";
 
 
 /**
@@ -18,7 +28,7 @@ import {getHost, getReviewsByHost, login, register, removeHost, saveHost, saveRe
  *       content:
  *         application/json:
  *           schema:
- *              $ref: "#/components/schemas/HostRegister"
+ *              $ref: "#/components/schemas/RegisterHost"
  *     responses:
  *       '201':
  *         description: "Host registered"
@@ -38,7 +48,7 @@ export async function hostRegister(req, res, _) {
  *     summary: "Logs the host in"
  *
  *     tags:
- *       - "hostAuth"
+ *       - "auth"
  *
  *     operationId: hostLogin
  *     x-eov-operation-handler: host/routes
@@ -48,7 +58,7 @@ export async function hostRegister(req, res, _) {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/EmailPassword"
+ *             $ref: "#/components/schemas/LoginEmailPassword"
  *
  *     responses:
  *       '200':
@@ -135,7 +145,7 @@ export async function deleteAccount(req, res, _) {
  *       content:
  *         application/json:
  *           schema:
- *              $ref: "#/components/schemas/Update"
+ *              $ref: "#/components/schemas/UpdateHost"
  *
  *     responses:
  *       '200':
@@ -159,6 +169,8 @@ export async function updateInfo(req, res, _) {
  * /hosts/{id}/reviews:
  *   post:
  *     summary: "Adds a review to target host"
+ *     description: "Only users are able to create a review. User must be logged in to be able to use this feature."
+ *
  *     tags:
  *       - "hostReviews"
  *
@@ -261,25 +273,27 @@ export async function printRating(req, res, _) {
  *     summary: "Create event"
  *
  *     tags:
- *       - "event"
+ *       - "hostEvent"
  *     operationId: createEvent
- *     x-eov-operation-handler: event/routes
+ *     x-eov-operation-handler: host/routes
  *
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
- *         schema:
- *              $ref: "#/components/schemas/CreateEvent"
+ *           schema:
+ *             $ref: "#/components/schemas/CreateEvent"
  *
  *     responses:
  *       '201':
  *         description: "Event created!"
  *       '400':
  *         description: "Invalid data provided"
+ *     security:
+ *       - JWT: ['HOST']
  *
  */
 export async function createEvent(req, res, _) {
-    const created = await create(req.user.id, req.body);
+    const created = await registerEvent(req.user.id, req.body);
     return created ? res.json(created) : res.sendStatus(400);
 }

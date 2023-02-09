@@ -17,7 +17,7 @@ import {getReviewsByUser, getUser, login, register, removeUser, saveUser} from "
  *       content:
  *         application/json:
  *           schema:
- *              $ref: "#/components/schemas/Register"
+ *              $ref: "#/components/schemas/RegisterUser"
  *     responses:
  *       '201':
  *         description: "User registered"
@@ -38,7 +38,7 @@ export async function userRegister(req, res, _) {
  *     summary: "Logs the user in"
  *
  *     tags:
- *       - "userAuth"
+ *       - "auth"
  *
  *     operationId: userLogin
  *
@@ -49,7 +49,7 @@ export async function userRegister(req, res, _) {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/UsernamePassword"
+ *             $ref: "#/components/schemas/LoginUsernamePassword"
  *
  *     responses:
  *       '200':
@@ -158,7 +158,7 @@ export async function deleteAccount(req, res, _) {
  *       content:
  *         application/json:
  *           schema:
- *              $ref: "#/components/schemas/Update"
+ *              $ref: "#/components/schemas/UpdateUser"
  *
  *     responses:
  *       '200':

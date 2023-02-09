@@ -1,4 +1,4 @@
-import { getEvent} from "./service.mjs";
+import {getEvent} from "./service.mjs";
 
 /**
  * @openapi

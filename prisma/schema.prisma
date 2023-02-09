@@ -87,6 +87,7 @@ model Event {
   id        Int        @default(autoincrement())
   hostId    Int
   host      Host       @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  name      String
   startDate DateTime
   endDate   DateTime
   price     Float

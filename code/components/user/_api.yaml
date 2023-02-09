@@ -1,12 +1,12 @@
 tags:
   - name: userProfile
     description: User profile information
-  - name: userAuth
+  - name: auth
     description: Authentication routes
 
 components:
   schemas:
-    UsernamePassword:
+    LoginUsernamePassword:
       type: object
       required:
         - username
@@ -20,7 +20,7 @@ components:
         password:
           type: string
           example: mYp@s$w0rd
-    Register:
+    RegisterUser:
       type: object
       required:
         - username
@@ -66,7 +66,7 @@ components:
               minLength: 10
               maxLength: 50
               example: jane.doe@gmail.com
-    Update:
+    UpdateUser:
       type: object
       required:
         - username

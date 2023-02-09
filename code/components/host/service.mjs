@@ -5,10 +5,12 @@ import {
     loadByCredentials,
     loadById,
     signHost,
-    updateHost
+    updateHost,
+    deleteEvent,
+    updateEvent,
+    insertEvent
 } from "./repository.mjs";
 import {createToken} from "../../lib/security.mjs";
-import {insertEvent} from "../event/repository.mjs";
 
 export async function register(host) {
     return signHost(host);
@@ -46,6 +48,14 @@ export async function getReviewsByHost(id) {
     return filterReviewsByHost(id);
 }
 
-export async function create(hostId, event) {
+export async function registerEvent(hostId, event) {
     return insertEvent(hostId, event);
+}
+
+export async function removeEvent(id) {
+    return deleteEvent(id);
+}
+
+export async function saveEvent(id, newData) {
+    return updateEvent(id, newData);
 }
