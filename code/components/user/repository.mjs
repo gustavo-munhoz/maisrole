@@ -6,7 +6,7 @@ const USER_FIELDS = {
     username: true,
     password: false,
     personalData: true,
-    roles: truewor
+    roles: true
 }
 export async function signUser(user) {
     //INSERT -- ok
