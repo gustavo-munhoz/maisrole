@@ -1,0 +1,6 @@
+tags:
+  - name: event
+  - description: Event properties
+
+components:
+  schemas:

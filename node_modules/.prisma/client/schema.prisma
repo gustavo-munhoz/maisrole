@@ -27,6 +27,8 @@ model Host {
   contact  hostContact[]
   roles    Role[]
   reviews  Review[]
+  events   Event[]
+  agenda   HostAgenda[]
 }
 
 model userPersonalData {
@@ -79,4 +81,41 @@ model Review {
   text     String?
 
   @@id([id, userId, hostId])
+}
+
+model Event {
+  id        Int        @default(autoincrement())
+  hostId    Int
+  host      Host       @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  price     Float
+  brief     String
+  state     EventState @relation(fields: [stateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  stateId   Int
+
+  @@id([id, hostId])
+}
+
+model EventState {
+  id     Int     @id
+  status String
+  Event  Event[]
+}
+
+model WeekDay {
+  id     Int          @id
+  day    String
+  Agenda HostAgenda[]
+}
+
+model HostAgenda {
+  id      Int     @default(autoincrement())
+  weekday WeekDay @relation(fields: [dayId], references: [id])
+  dayId   Int
+  open    String
+  host    Host?   @relation(fields: [hostId], references: [id])
+  hostId  Int
+
+  @@id([id, dayId, hostId])
 }
