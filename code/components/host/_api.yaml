@@ -20,7 +20,7 @@ components:
           type: string
           minLength: 5
           maxLength: 100
-          example: john.doe@email.com
+          example: hsandoval@verdugo.com
         password:
           type: string
           example: mYp@s$w0rd
