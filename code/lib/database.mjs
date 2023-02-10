@@ -387,12 +387,12 @@ async function populateDatabase() {
         });
         await prisma.review.create({
             data: {
-                postDate: new Date(),
+                postDate: new Date("2022-10-15"),
                 rating: 5,
                 text: "First off I'm pretty sure porn or something was being filmed in the kitchen." +
                      "I would recommend.",
-                userId: 8,
-                hostId: 3
+                userId: 4,
+                hostId: 4
             }
         });
         await prisma.review.create({

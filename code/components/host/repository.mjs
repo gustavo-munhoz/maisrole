@@ -11,6 +11,12 @@ const HOST_FIELDS = {
     roles: true
 }
 
+function getNumberOfDays(start, end) {
+    const date1 = new Date(start);
+    const date2 = new Date(end);
+    return Math.round(Math.abs(date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export async function signHost(host) {
     if (!await prisma.hostContact.findUnique({where: {email: host.email}})) {
         const dataForCreation = {
@@ -133,12 +139,23 @@ export async function updateHost(host){
     return prisma.$transaction([updateContact, updateAddress, updateHost])
 }
 
-export async function insertReview(hostId, userId, rating, text) {
+export async function insertReview(hostId, userId, review) {
+    const lastReviewDate = await prisma.review.findMany({
+        where: {
+            userId: userId,
+            hostId: hostId
+        }
+    }).then(ratings => ratings.length !== 0 ?
+        ratings.reduce((a, b) => a.postDate > b.postDate ? a : b).postDate : 0
+    );
+
+    if (getNumberOfDays(new Date(), lastReviewDate) <= 7) return null;
+
     return prisma.review.create({
         data: {
             postDate: new Date(),
-            rating: rating,
-            text: text,
+            rating: review.rating,
+            text: review.text,
             userId: userId,
             hostId: hostId
         }
@@ -149,7 +166,7 @@ export async function getRating(id) {
     return prisma.review.findMany({
         where: {hostId: id},
         select: {rating: true}
-    }).then(ratings =>
+    }).then(ratings => ratings.length === 0 ? 0 :
         (ratings.reduce((a, e) => a + e.rating, 0) / ratings.length).toFixed(2));
 }
 
@@ -167,7 +184,6 @@ export async function insertEvent(hostId, event) {
     const startDate = new Date(event.startDate);
     const endDate = new Date(event.endDate);
 
-    // comparar datas para dar o state autoamtico
     if (startDate > now && endDate > now)
     return prisma.event.create({
         data: {

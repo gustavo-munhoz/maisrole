@@ -195,11 +195,11 @@ components:
           example: Noite de Karaokê
         startDate:
           type: string # YYYY-MM-DD
-          #pattern: '^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$'
+          #pattern: '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'
           example: 2023-03-13
         endDate:
           type: string
-          #pattern: '^[d{4}]-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$'
+          #pattern: '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'
           example: 2023-03-17
         price:
           type: number

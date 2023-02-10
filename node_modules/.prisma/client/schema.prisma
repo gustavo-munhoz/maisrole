@@ -84,7 +84,7 @@ model Review {
 }
 
 model Event {
-  id        Int        @default(autoincrement())
+  id        Int        @unique @default(autoincrement())
   hostId    Int
   host      Host       @relation(fields: [hostId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   name      String

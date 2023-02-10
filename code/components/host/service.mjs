@@ -32,8 +32,8 @@ export async function getHost(id) {
 export async function removeHost(id) {
     return deleteHost(id);
 }
-export async function saveReview(hostId, userId, rating, text) {
-    return insertReview(hostId, userId, rating, text);
+export async function saveReview(hostId, userId, review) {
+    return insertReview(hostId, userId, review);
 }
 
 export async function showRating(id) {

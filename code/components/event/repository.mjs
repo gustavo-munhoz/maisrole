@@ -7,7 +7,7 @@ const EVENT_FIELDS = {
     endDate: true,
     price: true,
     brief: true,
-    state: true
+    stateId: true
 }
 
 
@@ -19,15 +19,15 @@ async function updateStatus(id) {
 
     if (currentDate > endDate) {
         return prisma.event.update({
-            where: {id: id}, data: {...EVENT_FIELDS, state: 0}
+            where: {id: id}, data: {...event, stateId: 2}
         });
     } else if (currentDate < startDate) {
         return prisma.event.update({
-            where: {id: id}, data: {...EVENT_FIELDS, state: 2}
+            where: {id: id}, data: {...event, stateId: 0}
         });
     } else {
         return prisma.event.update({
-            where: {id: id}, data: {...EVENT_FIELDS, state: 1}
+            where: {id: id}, data: {...event, stateId: 1}
         });
     }
 }
@@ -39,3 +39,36 @@ export async function readEvent(id) {
     });
 }
 
+export async function readAllEvents() {
+    return prisma.event.findMany();
+}
+
+export async function readEventsByDates(date1, date2 = null) {
+    if (date1 && date2) {
+        return prisma.event.findMany({
+            where: {
+                OR: [
+                    {
+                        AND: [
+                            {startDate: {gte: new Date(date1)}},
+                            {startDate: {lte: new Date(date2)}}
+                        ]},
+                    {
+                        AND: [
+                            {endDate: {gte: new Date(date1)}},
+                            {endDate: {lte: new Date(date2)}}
+                        ]
+                    }
+                ]
+            }
+        });
+    }
+    return prisma.event.findMany({
+        where: {
+            AND: [
+                {startDate: {lte: new Date(date1)}},
+                {endDate: {gte: new Date(date1)}}
+            ]
+        }
+    });
+}

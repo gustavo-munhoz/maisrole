@@ -201,7 +201,7 @@ export async function updateInfo(req, res, _) {
  *
  */
 export async function addReview(req, res, _) {
-    const rated = await saveReview(req.params.id, req.user.id, req.body.rating, req.body.text);
+    const rated = await saveReview(req.params.id, req.user.id, req.body);
     return rated ? res.json(rated) : res.sendStatus(400);
 }
 
