@@ -416,6 +416,10 @@ async function populateDatabase() {
     } else {
         debug({description: "Reviews data found!"});
     }
+    await makeStatus();
+    await makeWeekdays();
+    await makeEventsType();
+    await makeHostType();
 }
 
 async function makeStatus() {
@@ -486,12 +490,44 @@ async function makeWeekdays() {
     }
 }
 
+async function makeEventsType() {
+    const types = await prisma.eventType.findMany();
+    if (types.length === 0) {
+        await prisma.eventType.createMany({
+            data: [
+                {type: "Show"},
+                {type: "Private Party"},
+                {type: "Meeting"},
+            ]
+        });
+        info({description: "Event types created!"});
+    }
+    else {
+        debug({description: "Event types found!"})
+    }
+}
+
+async function makeHostType() {
+    const types = await prisma.hostType.findMany();
+    if (types.length === 0) {
+        await prisma.hostType.createMany({
+            data:[
+            {type:"Bar"},
+            {type:"Club House"},
+            {type:"Restaurant"},
+            {type:"Private"}
+        ]});
+        info({description: "Host types created!"});
+    }
+    else {
+        debug({description: "Host types found!"})
+    }
+}
+
 export async function bootstrapDb() {
     debug({description: "Checking initial data..."});
     await makeRole('ADMIN');
     await makeRole('USER');
     await makeRole('HOST');
     await populateDatabase();
-    await makeStatus();
-    await makeWeekdays();
 }
