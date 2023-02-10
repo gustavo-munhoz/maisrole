@@ -8,7 +8,7 @@ import {
     updateHost,
     deleteEvent,
     updateEvent,
-    insertEvent
+    insertEvent, filterEventsByHost
 } from "./repository.mjs";
 import {createToken} from "../../lib/security.mjs";
 
@@ -52,10 +52,14 @@ export async function registerEvent(hostId, event) {
     return insertEvent(hostId, event);
 }
 
-export async function removeEvent(id) {
-    return deleteEvent(id);
+export async function removeEvent(eventId, hostId) {
+    return deleteEvent(eventId, hostId);
 }
 
-export async function saveEvent(id, newData) {
-    return updateEvent(id, newData);
+export async function saveEvent(eventId, hostId, newData) {
+    return updateEvent(eventId, hostId, newData);
+}
+
+export async function getEventsByHost(id) {
+    return filterEventsByHost(id);
 }

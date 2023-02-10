@@ -7,7 +7,7 @@ import {
     saveHost,
     saveReview,
     showRating,
-    registerEvent
+    registerEvent, saveEvent, removeEvent, getEventsByHost
 } from "./service.mjs";
 
 
@@ -296,4 +296,108 @@ export async function printRating(req, res, _) {
 export async function createEvent(req, res, _) {
     const created = await registerEvent(req.user.id, req.body);
     return created ? res.json(created) : res.sendStatus(400);
+}
+
+/**
+ * @openapi
+ * /hosts/me/events/{id}:
+ *   put:
+ *     summary: Updates event information
+ *
+ *     tags:
+ *       - "hostEvent"
+ *     operationId: updateEvent
+ *     x-eov-operation-handler: host/routes
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateEvent'
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the event to be updated
+ *
+ *     responses:
+ *       '200':
+ *         description: Event updated successfully
+ *       '404':
+ *         description: Event not found
+ *
+ *     security:
+ *       - JWT: ['HOST']
+ */
+export async function updateEvent(req, res, _) {
+    const saved = await saveEvent(req.params.id, req.user.id, req.body);
+    return saved ? res.json(saved) : res.sendStatus(404);
+}
+
+/**
+ * @openapi
+ * /hosts/me/events/{id}:
+ *   delete:
+ *     summary: Deletes an event created by the logged host
+ *
+ *     tags:
+ *       - "hostEvent"
+ *
+ *     operationId: deleteEvent
+ *     x-eov-operation-handler: host/routes
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *
+ *     responses:
+ *       '200':
+ *         description: Event deleted successfully
+ *       '404':
+ *         description: Event not found
+ *
+ *     security:
+ *       - JWT: ['HOST']
+ */
+export async function deleteEvent(req, res, _) {
+    const deleted  = await removeEvent(req.params.id, req.user.id);
+    return deleted ? res.sendStatus(200) : res.sendStatus(404);
+}
+
+/**
+ * @openapi
+ * /hosts/{id}/events:
+ *   get:
+ *     summary: Returns all events created by a host
+ *
+ *     tags:
+ *       - "hostEvent"
+ *
+ *     operationId: listEventsByHost
+ *     x-eov-operation-handler: host/routes
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the host to get events
+ *
+ *     responses:
+ *       '200':
+ *         description: Returned events
+ *       '404':
+ *         description: No events found
+ */
+export async function listEventsByHost(req, res, _) {
+    const events = await getEventsByHost(req.params.id);
+    return events.length !== 0 ? res.json(events) : res.sendStatus(404);
 }

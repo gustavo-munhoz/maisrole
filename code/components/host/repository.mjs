@@ -198,10 +198,21 @@ export async function insertEvent(hostId, event) {
     });
 }
 
-export async function deleteEvent(id) {
-    return prisma.event.delete({where: {id: id}});
+export async function deleteEvent(eventId, hostId) {
+
+    return prisma.event.delete({
+        where: {
+
+        }
+    });
 }
 
-export async function updateEvent(id, newData) {
-    return prisma.event.update({where: {id: id}, data: newData});
+export async function updateEvent(eventId, hostId, newData) {
+    return prisma.event.update({
+        where: {id: eventId, hostId: hostId}, data: newData}
+    ).catch(null);
+}
+
+export async function filterEventsByHost(hostId) {
+    return prisma.event.findMany({where: {hostId: hostId}});
 }
