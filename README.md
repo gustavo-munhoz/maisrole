@@ -1,6 +1,6 @@
-# maisrole
+# NodeJS server for my back-end course
 
-Para rodar o servidor, deve-se utilizar os seguintes comandos:
+Commands to run server:
 
 npm i
 
@@ -11,13 +11,13 @@ prisma migrate dev
 npm start
 
 ---------------------------------------------------------------
-A usuário configurada para o banco de dados é:
+The default database credentials are:
 
 user: root
 
 password: root1234
 
 ---------------------------------------------------------------
-A rota do swagger é: 
+The swagger route is configured to:
 
 localhost:3001/api-docs/
